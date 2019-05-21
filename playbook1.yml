@@ -1,0 +1,54 @@
+#
+# Some links related to this playbook:
+# https://community.i2b2.org/wiki/display/getstarted/2.4.2.3+Run+Wildfly+as+a+Linux+Service
+# https://github.com/fmarchioni/mastertheboss/tree/master/ansible/wildfly-standalone
+# http://www.mastertheboss.com/howto/jboss-config/provisioning-wildfly-10-with-ansible
+#
+---
+- hosts: otherservers
+  become: yes
+  tasks:
+    - name: update apt cache
+      apt: update_cache=yes
+    - name: remove apache
+      apt: name=apache2 state=absent
+    - name: install jdk
+      apt: name=openjdk-8-jdk-headless state=present
+- hosts: host1
+  become: yes
+  tasks:
+    - name: install unzip
+      apt: name=unzip
+    - name: Download WildFly from jboss.org
+      get_url: url=http://download.jboss.org/wildfly/15.0.1.Final/wildfly-15.0.1.Final.zip dest=/opt/wildfly-15.0.1.Final.zip
+    - name: Extract Wildfly
+      unarchive: remote_src=yes src=/opt/wildfly-15.0.1.Final.zip dest=/opt creates=/opt/wildfly-15.0.1.Final
+    - name: status of wildfly dir
+      stat: path=/opt/wildfly
+      register: wildfly_status
+    - name: Move wildfly to dir without version
+      command: mv /opt/wildfly-15.0.1.Final /opt/wildfly
+      when: wildfly_status.stat.exists == False
+    - name: Make wildfly available to other hosts
+      replace:
+        path: /opt/wildfly/standalone/configuration/standalone.xml
+        regexp: '<inet-address value="\${jboss\.bind\.address:127\.0\.0\.1}"/>'
+        replace: '<any-address/>'
+      notify: restart wildlfy
+    - name: Copy the init script
+      copy: remote_src=yes src=/opt/wildfly/docs/contrib/scripts/init.d/wildfly-init-debian.sh dest=/etc/init.d/wildfly mode=0755
+    - name: Creates directory for wildfly configuration
+      file: path=/etc/default/wildfly state=directory
+    - name: Copy wildfly configuration file
+      copy: remote_src=yes src=/opt/wildfly/docs/contrib/scripts/init.d/wildfly.conf dest=/etc/default/widlfly
+    - name: Add group "wildfly"
+      group: name=wildfly
+    - name: Add user "wildfly"
+      user: name=wildfly group=wildfly home=/opt/wildfly
+    - name: Change ownership of WildFly installation
+      file: path=/opt/wildfly/ owner=wildfly group=wildfly state=directory recurse=yes
+    - name: Enable WildFly to be started at boot
+      service: name=wildfly enabled=yes state=started
+  handlers:
+    - name: restart wildfly
+      service: name=wildfly state=restarted
