@@ -34,7 +34,7 @@
         path: /opt/wildfly/standalone/configuration/standalone.xml
         regexp: '<inet-address value="\${jboss\.bind\.address:127\.0\.0\.1}"/>'
         replace: '<any-address/>'
-      notify: restart wildlfy
+      notify: restart wildfly
     - name: Copy the init script
       copy: remote_src=yes src=/opt/wildfly/docs/contrib/scripts/init.d/wildfly-init-debian.sh dest=/etc/init.d/wildfly mode=0755
     - name: Creates directory for wildfly configuration
