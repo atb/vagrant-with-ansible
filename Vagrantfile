@@ -29,6 +29,8 @@ Vagrant.configure("2") do |config|
     ansible.vm.hostname = "ansible"
     ansible.vm.network "private_network", ip: "192.168.33.10"
 
+    ansible.vm.synced_folder ".", "/vagrant", mount_options: ["dmode=755,fmode=600"]
+
     ansible.vm.provider "virtualbox" do |v|
       # We need 2048Mb so that Wildfly and Errai can execute
       v.memory = 2048
