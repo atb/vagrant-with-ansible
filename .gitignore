@@ -43,3 +43,6 @@ Temporary Items
 *.box
 
 # End of https://www.gitignore.io/api/osx,ansible,vagrant
+
+# We do not want to put the jenkins password in the repo
+initialAdminPassword
