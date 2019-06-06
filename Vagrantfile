@@ -34,13 +34,20 @@ Vagrant.configure("2") do |config|
     ansible.vm.hostname = "ansible"
     ansible.vm.network "private_network", ip: "192.168.33.10"
 
-    ansible.vm.synced_folder ".", "/vagrant", mount_options: ["dmode=755,fmode=600"]
+    # For some Windows and for running ansible "inside" jenkins 
+    ansible.vm.synced_folder ".", "/vagrant", mount_options: ["dmode=777,fmode=777"]
+
+    # For acessing jenkins in 8081
+    ansible.vm.network "forwarded_port", guest: 8080, host: 8081
 
     ansible.vm.provision "shell", inline: <<-SHELL
       sudo apt-get install -y --no-install-recommends apt-utils
       sudo apt-get install software-properties-common --yes
       sudo apt-add-repository --yes --u ppa:ansible/ansible
       sudo apt-get install ansible --yes
+      // For jenkins
+      // sudo apt-get http://mirrors.jenkins.io/war-stable/latest/jenkins.war
+      // sudo java -jar jenkins.war
     SHELL
   end
 end
