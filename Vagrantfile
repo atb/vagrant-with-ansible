@@ -34,10 +34,10 @@ Vagrant.configure("2") do |config|
     ansible.vm.hostname = "ansible"
     ansible.vm.network "private_network", ip: "192.168.33.10"
 
-    # For some Windows and for running ansible "inside" jenkins 
-    ansible.vm.synced_folder ".", "/vagrant", mount_options: ["dmode=777,fmode=777"]
+    # For some Windows and for running ansible "inside" jenkins
+    # ansible.vm.synced_folder ".", "/vagrant", mount_options: ["dmode=777,fmode=777"]
     # It seems that ansible has security issues with the previous command. Use instead:
-    # ansible.vm.synced_folder ".", "/vagrant", mount_options: ["dmode=775,fmode=600"]
+    ansible.vm.synced_folder ".", "/vagrant", mount_options: ["dmode=775,fmode=600"]
 
     # For acessing jenkins in 8081
     ansible.vm.network "forwarded_port", guest: 8080, host: 8081
