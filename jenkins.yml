@@ -7,6 +7,9 @@
     - name: update apt cache
       apt: update_cache=yes
 
+    - name: install git
+      apt: name=git state=present
+
     - name: install jdk
       apt: name=openjdk-8-jdk-headless state=present
 
@@ -36,7 +39,7 @@
       register: adminpassword
 
     - name: Bypass - initialAdminPassword
-      shell: mv /var/lib/jenkins/secrets/initialAdminPassword /vagrant 
+      shell: mv /var/lib/jenkins/secrets/initialAdminPassword /vagrant
       notify:
         - Restart Jenkins
       when: adminpassword.stat.exists == True
