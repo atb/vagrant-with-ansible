@@ -14,12 +14,7 @@ Vagrant.configure("2") do |config|
     host1.vm.hostname = "host1"
     host1.vm.network "private_network", ip: "192.168.33.11"
 
-    host1.vm.provider "virtualbox" do |v|
-      # We need 2048Mb so that Wildfly and Errai can execute
-      v.memory = 2048
-    end
-
-    # We want to access wildfly from the host using port 8080
+    # We want to access tomcat from the host using port 8080
     host1.vm.network "forwarded_port", guest: 8080, host: 8080
   end
 
