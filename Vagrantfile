@@ -42,9 +42,9 @@ Vagrant.configure("2") do |config|
       sudo apt-get install software-properties-common --yes
       sudo apt-add-repository --yes --u ppa:ansible/ansible
       sudo apt-get install ansible --yes
-      // For jenkins
-      // sudo apt-get http://mirrors.jenkins.io/war-stable/latest/jenkins.war
-      // sudo java -jar jenkins.war
+      # For jenkins
+      # sudo apt-get http://mirrors.jenkins.io/war-stable/latest/jenkins.war
+      # sudo java -jar jenkins.war
     SHELL
   end
 end
