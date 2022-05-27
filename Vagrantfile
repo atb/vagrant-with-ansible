@@ -12,7 +12,7 @@ Vagrant.configure("2") do |config|
   config.vm.define "host1" do |host1|
     host1.vm.box = "envimation/ubuntu-xenial"
     host1.vm.hostname = "host1"
-    host1.vm.network "private_network", ip: "192.168.33.11"
+    host1.vm.network "private_network", ip: "192.168.56.11"
 
     # We want to access tomcat from the host using port 8080
     host1.vm.network "forwarded_port", guest: 8080, host: 8080
@@ -21,13 +21,13 @@ Vagrant.configure("2") do |config|
   config.vm.define "host2" do |host2|
     host2.vm.box = "envimation/ubuntu-xenial"
     host2.vm.hostname = "host2"
-    host2.vm.network "private_network", ip: "192.168.33.12"
+    host2.vm.network "private_network", ip: "192.168.56.12"
   end
 
   config.vm.define "ansible" do |ansible|
     ansible.vm.box = "envimation/ubuntu-xenial"
     ansible.vm.hostname = "ansible"
-    ansible.vm.network "private_network", ip: "192.168.33.10"
+    ansible.vm.network "private_network", ip: "192.168.56.10"
 
     # For some Windows and for running ansible "inside" jenkins
     # ansible.vm.synced_folder ".", "/vagrant", mount_options: ["dmode=777,fmode=777"]
